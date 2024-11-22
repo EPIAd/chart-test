@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Line Graph</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Dynamic Line Graph</h1>
+    <form id="dataForm">
+      <label for="dataInput">Enter comma-separated values:</label>
+      <input type="text" id="dataInput" placeholder="e.g., 10, 20, 30, 40">
+      <button type="submit">Generate Graph</button>
+    </form>
+    <canvas id="lineChart"></canvas>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
