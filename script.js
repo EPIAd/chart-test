@@ -1,4 +1,5 @@
-const GITHUB_EXCEL_URL = "https://raw.githubusercontent.com/your_username/your_repo/main/portfolio.xlsx";
+const GITHUB_EXCEL_URL = "const GITHUB_EXCEL_URL = "https://github.com/EPIAd/chart-test/raw/refs/heads/main/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%EB%B9%84%EC%A4%91_EPIAD.xlsx";
+";
 
 document.getElementById("dateForm").addEventListener("submit", async function (e) {
   e.preventDefault();
