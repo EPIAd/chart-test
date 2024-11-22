@@ -29,22 +29,35 @@ async function fetchExcelData(url) {
   const arrayBuffer = await response.arrayBuffer();
   const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: "array" });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  return XLSX.utils.sheet_to_json(sheet);
+  const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+  // 데이터 구조 변경: 날짜(Date), 티커(Ticker), 비중(Weight)
+  const formattedData = [];
+  jsonData.forEach(row => {
+    const date = row["Date"];
+    for (const ticker in row) {
+      if (ticker !== "Date" && ticker !== "합계") {
+        formattedData.push({ Date: date, Ticker: ticker, Weight: row[ticker] });
+      }
+    }
+  });
+
+  return formattedData;
 }
 
 // 날짜 필터링
 function filterDataByDate(data, startDate, endDate) {
   return data.filter(row => {
-    const date = new Date(row["Date"]);
+    const date = new Date(row.Date);
     return date >= new Date(startDate) && date <= new Date(endDate);
   });
 }
 
 // ETF 가격 크롤링 및 수익률 계산
 async function calculateDailyReturns(portfolioData) {
-  const tickers = [...new Set(portfolioData.map(row => row["Ticker"]))];
-  const startDate = portfolioData[0]["Date"];
-  const endDate = portfolioData[portfolioData.length - 1]["Date"];
+  const tickers = [...new Set(portfolioData.map(row => row.Ticker))];
+  const startDate = portfolioData[0].Date;
+  const endDate = portfolioData[portfolioData.length - 1].Date;
 
   const prices = {};
   for (const ticker of tickers) {
@@ -54,21 +67,26 @@ async function calculateDailyReturns(portfolioData) {
   }
 
   const returns = [];
-  const dates = [];
+  const dates = [...new Set(portfolioData.map(row => row.Date))];
 
-  for (let i = 1; i < portfolioData.length; i++) {
-    const date = portfolioData[i]["Date"];
-    const prevDate = portfolioData[i - 1]["Date"];
+  for (let i = 1; i < dates.length; i++) {
+    const date = dates[i];
+    const prevDate = dates[i - 1];
 
     let dailyReturn = 0;
-    for (const ticker of tickers) {
-      const weight = portfolioData.find(row => row["Ticker"] === ticker && row["Date"] === date)?.["Weight"] || 0;
+    const dayData = portfolioData.filter(row => row.Date === date);
+    const prevDayData = portfolioData.filter(row => row.Date === prevDate);
+
+    for (const row of dayData) {
+      const ticker = row.Ticker;
+      const weight = row.Weight;
       const prevPrice = prices[ticker][prevDate];
       const currPrice = prices[ticker][date];
-      dailyReturn += weight * ((currPrice - prevPrice) / prevPrice);
+      if (prevPrice && currPrice) {
+        dailyReturn += weight * ((currPrice - prevPrice) / prevPrice);
+      }
     }
     returns.push(dailyReturn * 100); // 퍼센트로 변환
-    dates.push(date);
   }
 
   return { dates, returns };
