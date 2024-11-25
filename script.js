@@ -25,7 +25,7 @@ document.getElementById("dateForm").addEventListener("submit", async function (e
   drawGraph(returns.dates, returns.returns);
 });
 
-// GitHub에서 엑셀 데이터 가져오기
+// GitHub에서 Excel 데이터를 가져오는 함수
 async function fetchExcelData(url) {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -33,12 +33,12 @@ async function fetchExcelData(url) {
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
   const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-  // 데이터 구조 변경: 날짜(Date), 티커(Ticker), 비중(Weight)
+  // 데이터 구조 변경: { Date, Ticker, Weight }
   const formattedData = [];
   jsonData.forEach(row => {
-    const date = row["Date"];
+    const date = row["Date"]; // 날짜 열
     for (const ticker in row) {
-      if (ticker !== "Date" && ticker !== "합계") {
+      if (ticker !== "Date" && ticker !== "합계") { // "합계" 제외
         formattedData.push({ Date: date, Ticker: ticker, Weight: row[ticker] });
       }
     }
