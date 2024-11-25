@@ -3,23 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Returns Viewer</title>
+  <title>Excel Data Table</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script defer src="script.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Portfolio Returns Viewer</h1>
-    <form id="dateForm">
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" required>
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" required>
-      <button type="submit">Generate Graph</button>
-    </form>
-    <canvas id="lineChart"></canvas>
+    <h1>Excel Data Table Viewer</h1>
+    <button id="loadData">Load Excel Data</button>
+    <div id="tableContainer">
+      <!-- 데이터가 표시될 테이블 -->
+    </div>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
