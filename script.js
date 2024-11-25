@@ -56,4 +56,5 @@ function renderTable(data) {
 
   table.appendChild(thead);
   table.appendChild(tbody);
-  tableContainer.appendChild(
+  tableContainer.appendChild(table); // 테이블 추가
+}
